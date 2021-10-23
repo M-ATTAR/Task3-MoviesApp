@@ -43,7 +43,7 @@ class FavoritesViewController: UIViewController {
     
     // Creates the section holding the Cells and specifies the layout.
     func createFavoriteMoviesSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1)) // Row holds 3 cells
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.333333), heightDimension: .fractionalHeight(1)) // Row holds 3 cells
         
         let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
         layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)

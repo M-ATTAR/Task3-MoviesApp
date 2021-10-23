@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="JQY-OG-4Et">
-                        <rect key="frame" x="10" y="10" width="236" height="354"/>
+                        <rect key="frame" x="0.0" y="0.0" width="256" height="384"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="JQY-OG-4Et" secondAttribute="height" multiplier="200:300" id="wki-Io-RTX"/>
                         </constraints>
@@ -26,9 +26,9 @@
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="JQY-OG-4Et" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="0gz-B9-PKp"/>
-                <constraint firstAttribute="trailing" secondItem="JQY-OG-4Et" secondAttribute="trailing" constant="10" id="URX-rB-Src"/>
-                <constraint firstItem="JQY-OG-4Et" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="aLy-1o-VlV"/>
+                <constraint firstItem="JQY-OG-4Et" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="0gz-B9-PKp"/>
+                <constraint firstAttribute="trailing" secondItem="JQY-OG-4Et" secondAttribute="trailing" id="URX-rB-Src"/>
+                <constraint firstItem="JQY-OG-4Et" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="aLy-1o-VlV"/>
             </constraints>
             <size key="customSize" width="256" height="384"/>
             <connections>
