@@ -15,6 +15,7 @@ protocol FavoritePresenterProtocol {
     
     func attachView(view: View)
     func updateFavs()
+    func deleteFav(movieName: String)
 }
 
 
@@ -33,5 +34,12 @@ class FavoritesPresenter: FavoritePresenterProtocol {
     func updateFavs() {
         favs = localRealm.objects(FavMovie.self)
         favView?.reloadCollectionView()
+    }
+    func deleteFav(movieName: String) {
+        let toDelete = favs.filter("movieName == %@", movieName)
+        try! localRealm.write {
+            localRealm.delete(toDelete)
+        }
+        updateFavs()
     }
 }

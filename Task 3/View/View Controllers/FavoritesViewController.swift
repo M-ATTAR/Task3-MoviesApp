@@ -31,6 +31,12 @@ class FavoritesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         favPresenter.updateFavs() // Updates the array holding the favorite movies from the database every time the view is displayed on the screen.
+        
+        if favPresenter.favs.isEmpty {
+            collectionView.isHidden = true
+        } else {
+            collectionView.isEditing = false
+        }
     }
     
     // Creates a UICollectionViewLayout using UICompositionalLayout
@@ -68,6 +74,7 @@ extension FavoritesViewController: UICollectionViewDataSource {
         let favMovie = favPresenter.favs[indexPath.row]
         
         cell.movie = favMovie
+        cell.favPresenter = favPresenter
         
         return cell
     }

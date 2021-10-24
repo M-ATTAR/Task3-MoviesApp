@@ -147,9 +147,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         } else {
             movie = popularMovies[indexPath.row]
         }
-        
+
         cell.movie = movie
-        
+        cell.homePresenter = homePresenter
         
         
         return cell

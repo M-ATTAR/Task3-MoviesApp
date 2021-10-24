@@ -12,7 +12,7 @@ import RealmSwift
 protocol HomePresenterProtocol {
     associatedtype View
     
-    var favs: Results<FavMovie> { get }
+//    var favs: Results<FavMovie> { get }
     
     func attachView(view: View)
     func fetchAll()

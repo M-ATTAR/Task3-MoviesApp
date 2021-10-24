@@ -11,6 +11,7 @@ class FavCell: UICollectionViewCell {
 
     @IBOutlet weak var movieImage: UIImageView!
     let baseURL = "https://image.tmdb.org/t/p/w500"
+    var favPresenter: FavoritesPresenter?
     
     // Sets the favorite movie image once the variable has been set.
     var movie: FavMovie! {
@@ -30,5 +31,8 @@ class FavCell: UICollectionViewCell {
         movieImage.layer.cornerRadius = 15
         movieImage.clipsToBounds = true
     }
-
+    @IBAction func deleteTapped(_ sender: UIButton) {
+        favPresenter?.deleteFav(movieName: movie.movieName)
+    }
+    
 }
