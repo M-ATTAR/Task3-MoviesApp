@@ -44,7 +44,8 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        homePresenter.updateFavorites() // Updates the array holding the favorite movies from Realm database to update the button image accordingly.
+//        homePresenter.updateFavorites() // Updates the array holding the favorite movies from Realm database to update the button image accordingly.
+        reloadCollectionView()
     }
     @IBAction func deleteAllData(_ sender: UIBarButtonItem) {
         homePresenter.deleteAllData() // Deletes all data (debugging purposes only).

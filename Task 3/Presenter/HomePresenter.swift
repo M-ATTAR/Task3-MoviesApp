@@ -12,11 +12,8 @@ import RealmSwift
 protocol HomePresenterProtocol {
     associatedtype View
     
-//    var favs: Results<FavMovie> { get }
-    
     func attachView(view: View)
     func fetchAll()
-    func updateFavorites()
     func addToFavorites(movieName:String, imagePath: String)
     func deleteAllData()
     func deleteMovie(movieName: String)
@@ -28,7 +25,7 @@ class HomePresenter: HomePresenterProtocol {
     
     let localRealm = try! Realm()
     
-    var favs: Results<FavMovie> = try! Realm().objects(FavMovie.self)
+    var favs: Results<FavMovie> { try! Realm().objects(FavMovie.self) } // Computed Property
     
     let provider = MoyaProvider<MovieType>()
     
@@ -43,10 +40,10 @@ class HomePresenter: HomePresenterProtocol {
     // MARK: - Realm Functions
     
     // Updates the favs variable with the movies marked as favorite.
-    func updateFavorites() {
-        favs = localRealm.objects(FavMovie.self)
-        homeView?.reloadCollectionView()
-    }
+//    func updateFavorites() {
+//        favs = localRealm.objects(FavMovie.self)
+//        homeView?.reloadCollectionView()
+//    }
     // Checks if the movie exists in the database.
     func isFoundInFavorites(movieName: String) -> Bool {
         let results = favs.filter("movieName == %@", movieName)
@@ -69,7 +66,8 @@ class HomePresenter: HomePresenterProtocol {
             
             localRealm.add(favMovie)
         }
-        updateFavorites()
+        homeView?.reloadCollectionView()
+//        updateFavorites()
         
         print(favs)
     }
@@ -80,7 +78,8 @@ class HomePresenter: HomePresenterProtocol {
             // Delete the LocalOnlyQsTask.
             localRealm.delete(favs)
         }
-        updateFavorites()
+        homeView?.reloadCollectionView()
+//        updateFavorites()
     }
     // Deletes movie from database.
     func deleteMovie(movieName: String) {
@@ -88,7 +87,8 @@ class HomePresenter: HomePresenterProtocol {
         try! localRealm.write {
             localRealm.delete(toDelete)
         }
-        updateFavorites()
+        homeView?.reloadCollectionView()
+//        updateFavorites()
     }
     
     // MARK: - Moya Functions.

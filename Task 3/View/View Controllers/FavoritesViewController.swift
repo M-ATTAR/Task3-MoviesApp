@@ -30,8 +30,9 @@ class FavoritesViewController: UIViewController {
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        favPresenter.updateFavs() // Updates the array holding the favorite movies from the database every time the view is displayed on the screen.
+//        favPresenter.updateFavs() // Updates the array holding the favorite movies from the database every time the view is displayed on the screen.
         
+        reloadCollectionView()
         if favPresenter.favs.isEmpty {
             collectionView.isHidden = true
         } else {

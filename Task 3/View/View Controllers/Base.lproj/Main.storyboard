@@ -94,6 +94,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Movies" id="a9L-BE-4zq">
                         <barButtonItem key="rightBarButtonItem" systemItem="trash" id="STV-MM-8Pf">
+                            <color key="tintColor" systemColor="systemYellowColor"/>
                             <connections>
                                 <action selector="deleteAllData:" destination="BYZ-38-t0r" id="RAP-Oh-ZDQ"/>
                             </connections>
@@ -132,6 +133,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Lov-MF-Ren" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="lvM-AZ-0FP">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -149,6 +151,9 @@
         <image name="video.fill" catalog="system" width="128" height="82"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

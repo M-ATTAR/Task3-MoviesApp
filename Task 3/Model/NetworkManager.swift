@@ -39,10 +39,7 @@ extension MovieType: TargetType {
     
     // Specifies which method is used in the network call. In this case all are get methods, none are post.
     var method: Moya.Method {
-        switch self {
-        case .popular: return .get
-        case .upcoming: return .get
-        }
+        return .get
     }
     
     var task: Task {
