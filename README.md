@@ -10,5 +10,3 @@ In order to run the project make sure to run this in terminal first:
 - Uses Moya: Makes two network calls to the same API. One to get the Popular movies and the other one to get the Upcoming movies.
 - Uses CompositionalLayout: Using compositional layout for the UICollectionViewLayout to add two sections. One scrolls horizontally and the other one scrolls vertically.
 - Makes use of TabBars and NavigationControllers.
-
-
