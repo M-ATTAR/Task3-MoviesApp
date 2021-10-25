@@ -8,7 +8,7 @@
 import UIKit
 
 protocol HomeViewProtocol {
-    func reloadCollectionView(type: MovieType, movies: Result)
+//    func reloadCollectionView(type: MovieType, movies: Result)
     func reloadCollectionView()
     func activateLoading()
     func deactivateLoading()
@@ -18,8 +18,7 @@ protocol HomeViewProtocol {
 class HomeViewController: UIViewController {
     
     var homePresenter = HomePresenter() // Presenter instance.
-    var upcomingMovies = [Movie]()
-    var popularMovies = [Movie]()
+
     let waitingAlert = UIAlertController(title: nil, message: "Loading...", preferredStyle: .alert)
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -44,15 +43,17 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        homePresenter.updateFavorites() // Updates the array holding the favorite movies from Realm database to update the button image accordingly.
+
         reloadCollectionView()
     }
     @IBAction func deleteAllData(_ sender: UIBarButtonItem) {
+        
         homePresenter.deleteAllData() // Deletes all data (debugging purposes only).
     }
     
     // Creates compositional layout for UICollectionViewLayout and splits the collectionview into two sections one for the upcoming movies and one for the popular movies.
     func createCompositionalLayout() -> UICollectionViewLayout {
+        
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             switch sectionIndex {
             case 0:
@@ -70,6 +71,7 @@ class HomeViewController: UIViewController {
     
     // Creates the LayoutSection for the upcoming movies section
     func createUpcomingMoviesSection() -> NSCollectionLayoutSection {
+        
         let itemSize                                = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.50), heightDimension: .fractionalHeight(1))
         
         let layoutItem                              = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -87,22 +89,24 @@ class HomeViewController: UIViewController {
     
     // Creates the LayoutSection for the popular movies section
     func createPopularMoviesSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
         
-        let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
-        layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 0, trailing: 5)
+        let itemSize                                = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
         
-        let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(310))
-        let layoutGroup = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize, subitems: [layoutItem])
+        let layoutItem                              = NSCollectionLayoutItem(layoutSize: itemSize)
+        layoutItem.contentInsets                    = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 0, trailing: 5)
         
-        let layoutSection = NSCollectionLayoutSection(group: layoutGroup)
-        let layoutSectionHeader = createSectionHeader()
-        layoutSection.boundarySupplementaryItems = [layoutSectionHeader]
+        let layoutGroupSize                         = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(310))
+        let layoutGroup                             = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize, subitems: [layoutItem])
+        
+        let layoutSection                           = NSCollectionLayoutSection(group: layoutGroup)
+        let layoutSectionHeader                     = createSectionHeader()
+        layoutSection.boundarySupplementaryItems    = [layoutSectionHeader]
         return layoutSection
     }
     
     // creates the section header which displays either Upcoming Movies or Popular Movies.
     func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        
         let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(30))
         let layoutSectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         return layoutSectionHeader
@@ -128,36 +132,47 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        
+        return homePresenter.movies.count
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return upcomingMovies.count
-        } else {
-            return popularMovies.count
-        }
+        
+        return homePresenter.movies[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MovieCell
         
-        var movie: Movie
+        let movie = homePresenter.movies[indexPath.section][indexPath.row]
         
-        if indexPath.section == 0 {
-            movie = upcomingMovies[indexPath.row]
+        if homePresenter.isFoundInFavorites(movieName: movie.original_title) {
+            cell.favButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
         } else {
-            movie = popularMovies[indexPath.row]
+            cell.favButton.setImage(UIImage(systemName: "star"), for: .normal)
         }
 
         cell.movie = movie
         cell.homePresenter = homePresenter
         
-        
         return cell
+    }
+    
+    // Pagination functionality.
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height // Entire ScrollView
+        let height = scrollView.frame.size.height // Height of the screen
+        
+        if offsetY > contentHeight - height {
+            homePresenter.paginate()
+        }
     }
 }
 
 extension HomeViewController: HomeViewProtocol {
+    
     // Presents UIAlertController when the Presenters calls it to tell the user that something wrong happened. Dismisses the waiting alert first to not overlap.
     func errorAlert(title: String, message: String) {
         DispatchQueue.main.async {
@@ -185,21 +200,13 @@ extension HomeViewController: HomeViewProtocol {
         present(waitingAlert, animated: true, completion: nil)
     }
     
-    func deactivateLoading() { // Deactivates the loading animation when the presenter calls it.
+    // Deactivates the loading animation when the presenter calls it.
+    func deactivateLoading() {
         DispatchQueue.main.async {
             self.waitingAlert.dismiss(animated: true, completion: nil)
         }
     }
-    
-    // Reloads the collection view when the data has been changed.
-    func reloadCollectionView(type: MovieType, movies: Result) {
-        if type == .upcoming {
-            upcomingMovies = movies.results
-        } else {
-            popularMovies = movies.results
-        }
-        collectionView.reloadData()
-    }
+
     // Reloads the collection view without any data.
     func reloadCollectionView() {
         collectionView.reloadData()

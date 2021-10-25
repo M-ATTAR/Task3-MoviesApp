@@ -20,14 +20,16 @@ struct NetworkManager {
 
 // enum for Moya Network Call. Popular movies or Upcoming ones.
 enum MovieType {
-    case popular
     case upcoming
+    case popular(page: Int)
 }
 
 extension MovieType: TargetType {
+    
     var baseURL: URL {
         URL(string: "https://api.themoviedb.org/3/movie")!
     }
+    
     var path: String {
         switch self {
         case .popular:
@@ -43,16 +45,17 @@ extension MovieType: TargetType {
     }
     
     var task: Task {
-        
+        let params: [String: Any] = ["language": "en-US", "api_key":"c8984794b536d067f2587fa6f3d84c39"]
         // Parameters needed for the network call. Language and the apiKey.
         switch self {
-        case .upcoming, .popular: return .requestParameters(parameters: ["language": "en-US", "api_key":"c8984794b536d067f2587fa6f3d84c39"], encoding: URLEncoding.default)
+        case .upcoming:
+            return .requestParameters(parameters: params, encoding: URLEncoding.default)
+        case .popular(let page):
+            return .requestParameters(parameters: ["language": "en-US", "api_key":"c8984794b536d067f2587fa6f3d84c39", "page":page], encoding: URLEncoding.default)
         }
     }
     
     var headers: [String : String]? {
         return ["Content-type": "application/json"]
     }
-    
-    
 }

@@ -11,9 +11,14 @@ import RealmSwift
 
 protocol HomePresenterProtocol {
     associatedtype View
+    var movies: [[Movie]] { get }
     
     func attachView(view: View)
+    
+    // Moya Functions
     func fetchAll()
+    func paginate()
+    // Realm Functions
     func addToFavorites(movieName:String, imagePath: String)
     func deleteAllData()
     func deleteMovie(movieName: String)
@@ -23,10 +28,14 @@ protocol HomePresenterProtocol {
 
 class HomePresenter: HomePresenterProtocol {
     
-    let localRealm = try! Realm()
-    
     var favs: Results<FavMovie> { try! Realm().objects(FavMovie.self) } // Computed Property
+    var page = 1
     
+    var upcomingMovies = [Movie]()
+    var popularMovies = [Movie]()
+    var movies: [[Movie]] = [ [], [] ]
+    
+    let localRealm = try! Realm()
     let provider = MoyaProvider<MovieType>()
     
     typealias View = HomeViewProtocol
@@ -34,18 +43,15 @@ class HomePresenter: HomePresenterProtocol {
     
     // Attaches the HomeViewController protocol to the presenter.
     func attachView(view: HomeViewProtocol) {
+        
         self.homeView = view
     }
     
     // MARK: - Realm Functions
     
-    // Updates the favs variable with the movies marked as favorite.
-//    func updateFavorites() {
-//        favs = localRealm.objects(FavMovie.self)
-//        homeView?.reloadCollectionView()
-//    }
     // Checks if the movie exists in the database.
     func isFoundInFavorites(movieName: String) -> Bool {
+        
         let results = favs.filter("movieName == %@", movieName)
         
         print(results)
@@ -59,6 +65,7 @@ class HomePresenter: HomePresenterProtocol {
     
     // Adds a new movie to database.
     func addToFavorites(movieName:String, imagePath: String) {
+        
         try! localRealm.write {
             let favMovie = FavMovie()
             favMovie.movieName = movieName
@@ -67,54 +74,79 @@ class HomePresenter: HomePresenterProtocol {
             localRealm.add(favMovie)
         }
         homeView?.reloadCollectionView()
-//        updateFavorites()
-        
         print(favs)
     }
     
     // Deletes all data from database. (Debug purposes only).
     func deleteAllData() {
+        
         try! localRealm.write {
-            // Delete the LocalOnlyQsTask.
+            // Delete all favorite movies.
             localRealm.delete(favs)
         }
         homeView?.reloadCollectionView()
-//        updateFavorites()
     }
     // Deletes movie from database.
     func deleteMovie(movieName: String) {
+        
         let toDelete = favs.filter("movieName == %@", movieName)
         try! localRealm.write {
             localRealm.delete(toDelete)
         }
         homeView?.reloadCollectionView()
-//        updateFavorites()
     }
     
     // MARK: - Moya Functions.
     
+    func paginate() {
+        
+        page += 1
+        fetchMovies(type: .popular(page: page)) {
+            //
+        }
+    }
+    
     // Fetches Upcoming & Popular Movies from MovieDB API.
     func fetchAll() {
+        
         homeView?.activateLoading() // activates loading animation while fetching data.
         fetchMovies(type: .upcoming) {
-            self.fetchMovies(type: .popular) {
+            self.fetchMovies(type: .popular(page: self.page) ) {
                 self.homeView?.deactivateLoading() // deactivates loading animation after fetching the data from both Upcoming and Popular movies.
             }
         }
     }
     
+    func fillData(type: MovieType, movies: Result) {
+        
+        switch type {
+        case .upcoming:
+            upcomingMovies = movies.results
+            self.movies[0] = upcomingMovies
+        case .popular(let page):
+            popularMovies = movies.results
+            if page == 1 {
+                self.movies[1] = popularMovies
+            } else {
+                self.movies[1].append(contentsOf: popularMovies)
+            }
+        }
+        homeView?.reloadCollectionView()
+    }
+    
     // Fetches Either Upcoming or Popular Movies from MovieDB API.
     func fetchMovies(type: MovieType, completion: (() -> Void)? = nil) {
+        
         provider.request(type) { [weak self] result in
             switch result {
-            case let .success(moyaResponse):
                 
+            case let .success(moyaResponse):
                 do {
+                    
                     let decoder = JSONDecoder()
                     let movies = try decoder.decode(Result.self, from: moyaResponse.data)
                     
-                    self?.homeView?.reloadCollectionView(type: type, movies: movies) // Reloads collection view in the HomeViewController; it specifies which movie type has been requested to update its array and passes the data after decoding it.
-                    
+                    self?.fillData(type: type, movies: movies)
                 } catch {
                     print("something went wrong")
                     self?.homeView?.deactivateLoading()

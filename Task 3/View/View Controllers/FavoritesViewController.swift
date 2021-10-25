@@ -30,7 +30,6 @@ class FavoritesViewController: UIViewController {
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        favPresenter.updateFavs() // Updates the array holding the favorite movies from the database every time the view is displayed on the screen.
         
         reloadCollectionView()
         if favPresenter.favs.isEmpty {
@@ -55,7 +54,7 @@ class FavoritesViewController: UIViewController {
         let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
         layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
         
-        let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(200))
+        let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.333))
         let layoutGroup = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize, subitems: [layoutItem])
         
         let layoutSection = NSCollectionLayoutSection(group: layoutGroup)

@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -93,7 +94,8 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Movies" id="a9L-BE-4zq">
-                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="STV-MM-8Pf">
+                        <barButtonItem key="rightBarButtonItem" id="STV-MM-8Pf">
+                            <imageReference key="image" image="trash.fill" catalog="system" symbolScale="medium"/>
                             <color key="tintColor" systemColor="systemYellowColor"/>
                             <connections>
                                 <action selector="deleteAllData:" destination="BYZ-38-t0r" id="RAP-Oh-ZDQ"/>
@@ -148,6 +150,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="trash.fill" catalog="system" width="121" height="128"/>
         <image name="video.fill" catalog="system" width="128" height="82"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
