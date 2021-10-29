@@ -9,8 +9,12 @@ import Foundation
 
 protocol HomeInteractorProtocol: AnyObject {
 #warning("Can some functions do some operations without the need to send the presenter anything? Example: deleteAllRealmData, addMovieToFav and deleteMovieFromRealm")
+    
+    // Moya Functions
     func fetchData()
     func paginate()
+    
+    // Realm Functions
     func deleteAllRealmData()
     func addMovieToFav(movieName: String, imagePath: String)
     func isFavourite(movieName: String) -> Bool
@@ -28,6 +32,7 @@ class HomeSceneInteractor: HomeInteractorProtocol {
     
     // MARK: - Moya Functions
     
+    // Fetches the data from Moya using worker functions.
     func fetchData() {
         
         fetchUpcomingMovies {
@@ -37,6 +42,7 @@ class HomeSceneInteractor: HomeInteractorProtocol {
         }
     }
     
+    // Fetches Upcoming movies and add them to the array.
     func fetchUpcomingMovies(completion: @escaping () -> Void) {
         worker.fetchMovies(type: .upcoming) { movies, error in
             guard let movies = movies else {
@@ -48,6 +54,7 @@ class HomeSceneInteractor: HomeInteractorProtocol {
         }
     }
     
+    // Fetches the first page of the Popular movies and adds them to the array.
     func fetchPopularMovies(completion: @escaping () -> Void) {
         worker.fetchMovies(type: .popular(page: 1)) { movies, error in
             guard let movies = movies else {
@@ -59,6 +66,7 @@ class HomeSceneInteractor: HomeInteractorProtocol {
         }
     }
     
+    // Fetches pages beyond the first page with every pagination call and appends them to the array.
     func paginate() {
         page += 1
         worker.fetchMovies(type: .popular(page: page), completion: { movies, error in
@@ -73,18 +81,22 @@ class HomeSceneInteractor: HomeInteractorProtocol {
     
     // MARK: - Realm Functions
     
+    // Deletes all realm data. (For debugging purposes only).
     func deleteAllRealmData() {
         worker.deleteAllData()
         presenter?.reloadCollectionView()
     }
     
+    // Adds movie to favorites using worker functions
     func addMovieToFav(movieName: String, imagePath: String) {
         worker.addToFavorites(movieName: movieName, imagePath: imagePath)
         presenter?.reloadCollectionView()
     }
+    // Checks whether passed movie is marked as favorite or not.
     func isFavourite(movieName: String) -> Bool {
         return worker.isFoundInFavorites(movieName: movieName)
     }
+    // Deletes the passed movie from realm database.
     func deleteMovieFromRealm(movieName: String) {
         worker.deleteMovieFromRealm(movieName: movieName)
         presenter?.reloadCollectionView()

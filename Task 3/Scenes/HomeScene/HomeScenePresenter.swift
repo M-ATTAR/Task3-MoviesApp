@@ -18,17 +18,19 @@ class HomeScenePresenter: HomeScenePresenterProtocol {
     
     weak var viewController: HomeViewProtocol?
     
+    // Displays an Alert Controller with the error message.
     func showError(error: MoyaError) {
-        // Call ViewController for error
         viewController?.errorAlert(title: "Something wrong happened", message: error.localizedDescription)
     }
     
+    // Fills the collection view with data passed from the Interactor and deactivates loading animation.
     func fillCollectionView(movies: [[Movie]]) {
         // call viewcontroller to fill movies
         viewController?.fillCollectionView(movies: movies)
         viewController?.deactivateLoading()
     }
     
+    // Reloads the collection view.
     func reloadCollectionView() {
         viewController?.reloadCollectionView()
     }

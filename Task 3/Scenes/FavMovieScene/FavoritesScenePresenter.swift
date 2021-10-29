@@ -16,6 +16,7 @@ class FavoriteScenePresenter: FavoriteScenePresenterProtocol {
     
     weak var viewController: FavoritesViewProtocol?
     
+    // Loads favorite movies passed by the interactor to the viewcontroller.
     func loadFavorites(favorites: Results<FavMovie>) {
         viewController?.loadFavorites(favorites: favorites)
     }

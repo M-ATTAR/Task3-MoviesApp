@@ -33,6 +33,7 @@ class FavoritesViewController: UIViewController {
         interactor?.fetchFav()
     }
     
+    // Initializes the Interactor and the Presenter.
     func setup() {
         let viewController = self
         let interactor = FavoriteSceneInteractor()
@@ -47,7 +48,7 @@ class FavoritesViewController: UIViewController {
         super.viewWillAppear(animated)
         
         reloadCollectionView()
-        if favorites.isEmpty {
+        if favorites.isEmpty { // Checks if the collectionview is empty. If it is, Hide it and show the "No Movies Found" Label. 
             collectionView.isHidden = true
             noMoviesLabel.isHidden = false
         } else {

@@ -16,7 +16,7 @@ protocol HomeViewProtocol: AnyObject {
 
 class HomeViewController: UIViewController {
     
-    var interactor: HomeInteractorProtocol?
+    var interactor: HomeInteractorProtocol? // Instance of the Interactor Protocol.
     var movies = [[Movie]]()
 
     let waitingAlert = UIAlertController(title: nil, message: "Loading...", preferredStyle: .alert)
@@ -42,6 +42,7 @@ class HomeViewController: UIViewController {
         interactor?.fetchData()
     }
     
+    // Connecting the instances of the protocols and intializing the Interactor and the Presenter.
     private func setup() {
         let viewController = self
         let interactor = HomeSceneInteractor()
@@ -155,7 +156,9 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         let movie = movies[indexPath.section][indexPath.row]
         
 #warning("Wrong VIP Implementation. Results should come from Presenter not directly from Interactor")
+        
         if let interactor = interactor {
+            // Checks if the movie in this cell is marked as favorite. If it is, fill the button image.
             if interactor.isFavourite(movieName: movie.original_title) {
                 cell.favButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
             } else {
@@ -164,7 +167,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         }
         
         cell.movie = movie
-        cell.interactor = interactor
+        cell.interactor = interactor // Give the button an instance of the interactor to implement the button functionality.
         
         return cell
     }
@@ -184,6 +187,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
 
 extension HomeViewController: HomeViewProtocol {
     
+    // Fills the Movies array and reloads the CollectionView.
     func fillCollectionView(movies: [[Movie]]) {
         self.movies = movies
         collectionView.reloadData()

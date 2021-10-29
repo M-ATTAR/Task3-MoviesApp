@@ -41,6 +41,7 @@ class HomeSceneWorker {
     
     // MARK: - Realm Functions
     
+    // Adds movie to favorites.
     func addToFavorites(movieName:String, imagePath: String) {
         try! localRealm.write {
             let favMovie = FavMovie()
@@ -51,6 +52,7 @@ class HomeSceneWorker {
         }
     }
     
+    // Deletes all data from realm. Debugging purposes only.
     func deleteAllData() {
         for fav in favs {
             print(fav.movieName)
@@ -62,6 +64,7 @@ class HomeSceneWorker {
         }
     }
     
+    // Checks whether passed movie is in Realm database or not.
     func isFoundInFavorites(movieName: String) -> Bool {
         let results = favs.filter("movieName == %@", movieName)
         
@@ -74,6 +77,7 @@ class HomeSceneWorker {
         }
     }
     
+    // Deletes passed movie from realm.
     func deleteMovieFromRealm(movieName: String) {
         let toDelete = favs.filter("movieName == %@", movieName)
         try! localRealm.write {
