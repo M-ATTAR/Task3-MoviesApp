@@ -35,7 +35,7 @@ class FavoritesViewController: UIViewController {
         if favPresenter.favs.isEmpty {
             collectionView.isHidden = true
         } else {
-            collectionView.isEditing = false
+            collectionView.isHidden = false
         }
     }
     
