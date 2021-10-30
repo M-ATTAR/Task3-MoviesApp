@@ -88,7 +88,8 @@ class HomeViewController: UIViewController {
         let layoutItem                              = NSCollectionLayoutItem(layoutSize: itemSize)
         layoutItem.contentInsets                    = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
         
-        let layoutGroupSize                         = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(280))
+        // Group width 0.93 to allow a part of a third cell to be visible.
+        let layoutGroupSize                         = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(285))
         let layoutGroup                             = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize, subitems: [layoutItem])
         
         let layoutSection                           = NSCollectionLayoutSection(group: layoutGroup)
@@ -118,7 +119,7 @@ class HomeViewController: UIViewController {
     // creates the section header which displays either Upcoming Movies or Popular Movies.
     func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
         
-        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(25))
+        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(30))
         let layoutSectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         return layoutSectionHeader
     }
@@ -155,7 +156,7 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         let movie = movies[indexPath.section][indexPath.row]
         
-#warning("Wrong VIP Implementation. Results should come from Presenter not directly from Interactor")
+#warning("Wrong VIP Implementation, Results should come from Presenter not directly from Interactor")
         
         if let interactor = interactor {
             // Checks if the movie in this cell is marked as favorite. If it is, fill the button image.
